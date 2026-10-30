@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>OneTapLasPiñas</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --card: #000;
+        --tile: #000;
+        --text: #fff;
+        --muted: #666;
+        --line: #333;
+        --accent: #d4af37;
+        --gold: #c9a82e;
+        --shadow: rgba(0,0,0,0.4);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #050505;
+        color: var(--text);
+        font-family: "Outfit", system-ui, sans-serif;
+        padding: 24px 20px 48px;
+        background: linear-gradient(180deg, #050505 0%, #0a0a0a 100%);
+      }
+      main {
+        max-width: 480px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .panel {
+        background: var(--card);
+        border-radius: 30px;
+        padding: 30px 28px;
+        border: 1px solid var(--line);
+        backdrop-filter: blur(15px);
+        box-shadow: 
+          0 4px 20px rgba(0,0,0,0.4),
+          0 0 0 1px rgba(212,175,55,0.1);
+      }
+      .panel h2 {
+        margin: 0 0 8px;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--accent);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+      .hint {
+        margin: 0 0 14px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(212,175,55,0.08);
+      }
+      .row:last-child {
+        border-bottom: none;
+      }
+      .row > .ico {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        color: var(--accent);
+        filter: grayscale(100%);
+      }
+      .row > .ico:hover {
+        transform: scale(1.1);
+        color: var(--gold);
+      }
+      .row > div {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .row > div span {
+        font-size: 10px;
+        letter-spacing: 1px;
+        color: var(--muted);
+      }
+      .row > div b {
+        font-size: 15px;
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      /* NFC card */
+      .nfc {
+        position: relative;
+        aspect-ratio: 1.586/1;
+        border-radius: 22px;
+        padding: 5%;
+        overflow: hidden;
+        background: var(--card) url("image.png") center / 100% 100% no-repeat;
+        border: 1px solid var(--line);
+        box-shadow:
+          0 0 0 6px var(--card),
+          0 0 0 7px #111,
+          0 10px 30px rgba(0,0,0,0.5);
+      }
+      .nfc .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: clamp(18px, 5.6vw, 26px);
+      }
+      .nfc .brand span {
+        color: var(--text);
+      }
+      .nfc .brand .accent {
+        color: var(--accent);
+        text-shadow: 0 0 10px rgba(212,175,55,0.4);
+      }
+      .nfc .brand .accent {
+        color: var(--accent);
+        text-shadow: 0 0 10px rgba(212,175,55,0.4);
+      }
+      .nfc .brand i {
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        border: 0.22em solid #fff;
+        position: relative;
+        flex: none;
+      }
+      .nfc .brand i::after {
+        content: "";
+        position: absolute;
+        inset: 0.18em;
+        border-radius: 50%;
+        background: #fff;
+      }
+      .nfc .tap {
+        position: absolute;
+        right: 5%;
+        top: 5%;
+        text-align: right;
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        color: #aaa;
+        line-height: 1.2;
+      }
+      .nfc .tap svg {
+        display: block;
+        margin-left: auto;
+        margin-bottom: 2px;
+      }
+      .nfc .type {
+        position: absolute;
+        left: 8%;
+        top: 30%;
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: #9a8a70;
+      }
+      .nfc .brand,
+      .nfc .tap,
+      .nfc .type {
+        display: none;
+      }
+      .logo {
+        position: absolute;
+        left: 50%;
+        top: 55%;
+        transform: translate(-50%, -50%);
+        width: 45%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--card);
+        border: 1px solid var(--line);
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        padding: 0;
+        color: var(--text);
+        transition: box-shadow 0.3s, border-color 0.3s;
+      }
+      .logo:hover {
+        box-shadow: 0 0 20px rgba(212,175,55,0.2);
+        border-color: var(--accent);
+      }
+      .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .logo span {
+        font-weight: 800;
+        font-size: clamp(18px, 6vw, 30px);
+        line-height: 0.95;
+        text-align: center;
+      }
+      .logo small {
+        display: block;
+        font-size: 8px;
+        letter-spacing: 3px;
+        font-weight: 500;
+        margin-top: 4px;
+      }
+
+      /* tiles */
+      .tile {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: 16px;
+        background: var(--tile);
+        overflow: hidden;
+        cursor: pointer;
+        border: 0;
+        padding: 0;
+        color: var(--muted);
+        font: inherit;
+        font-size: 14px;
+        display: grid;
+        place-items: center;
+        width: 100%;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .tile:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      }
+      .tile img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .tile .plus {
+        font-size: 28px;
+        line-height: 1;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .rm {
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        z-index: 2;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 0;
+        background: #000a;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+        display: none;
+      }
+      .has .rm {
+        display: block;
+      }
+      .editing-off .rm {
+        display: none !important;
+      }
+
+      #add {
+        all: unset;
+        box-sizing: border-box;
+        width: 100%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-weight: 600;
+        font-size: 17px;
+        background: var(--card);
+        border: 1px solid var(--accent);
+        border-radius: 12px;
+        padding: 12px 20px;
+        color: var(--accent);
+        transition: all 0.3s;
+        position: relative;
+      }
+      #add::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--gold);
+        opacity: 0.1;
+      }
+      #add:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      :focus-visible {
+        outline: none;
+      }
+      .ico {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--tile);
+        display: grid;
+        place-items: center;
+        flex: none;
+        font-size: 16px;
+        font-style: normal;
+        filter: grayscale(100%);
+      }
+      .ico:hover {
+        transform: scale(1.1);
+      }
+      
+      
+      
+      
+      
+      
+      #msg {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%);
+        background: var(--card);
+        color: var(--text);
+        padding: 12px 18px;
+        border-radius: 999px;
+        font-weight: 600;
+        border: 1px solid var(--line);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        white-space: nowrap;
+      }
+      #msg.show {
+        opacity: 1;
+      }
+      input[type="file"] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="panel">
+        <div class="nfc">
+          <div class="brand"><i></i><span class="accent">OneTapLasPiñas</span></div>
+          <div class="tap">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#bbb"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path
+                d="M6 8a6 6 0 0 1 0 8M10 5a10 10 0 0 1 0 14M14 2a14 14 0 0 1 0 20"
+              /></svg
+            >TAP TO CONNECT
+          </div>
+          <div class="type">NFC SMART CARD</div>
+          <button
+            class="logo"
+            id="logo"
+            type="button"
+            aria-label="Add or change logo"
+            data-slot="logo"
+          >
+            <span>ONETAP<small>LAS PIÑAS</small></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <button id="add" type="button">
+          <i class="ico">👤＋</i>Add to contacts
+        </button>
+      </section>
+
+      <section class="panel">
+        <h2>Contact info</h2>
+        <div class="row">
+          <i class="ico">◉</i>
+          <div><span>Name</span><b>Aira Marie Descallar</b></div>
+        </div>
+        <div class="row">
+          <i class="ico">i</i>
+          <div>
+            <span>Bio</span><b>Endless connection for you and your business</b>
+          </div>
+        </div>
+        <div class="row">
+          <i class="ico">★</i>
+          <div><span>Company</span><b>Endless Connection</b></div>
+        </div>
+        <div class="row">
+          <i class="ico">☆</i>
+          <div><span>Position</span><b>Owner</b></div>
+        </div>
+        <a class="row" href="tel:09625430267"
+          ><i class="ico">✆</i>
+          <div><span>Contact</span><b>0962 543 0267</b></div></a
+        >
+      </section>
+
+      <section class="panel">
+        <h2>Social media</h2>
+        <a class="row" href="https://www.facebook.com/airamarie.descallar.9"
+          ><i class="ico fb">f</i>
+          <div><span>Facebook</span><b>airamarie.descallar.9</b></div></a
+        >
+        <a class="row" href="https://www.instagram.com/_armre.iaai/"
+          ><i class="ico ig">◎</i>
+          <div><span>Instagram</span><b>_armre.iaai</b></div></a
+        >
+      </section>
+    </main>
+    <input type="file" id="file" accept="image/*" />
+    <div id="msg" role="status"></div>
+
+    <script>
+      /* PERMANENT IMAGES (shown to everyone who taps your card):
+   put your image file names or links here, e.g. logo:'logo.png', p1:'product1.jpg' */
+      const IMAGES = {
+        logo: "profile.png",
+        p1: "product/1.png",
+        p2: "product/2.png",
+        p3: "product/3.png",
+        p4: "product/4.png",
+      };
+
+      const KEY = "onetap-images";
+      let saved = {};
+      try {
+        saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+      } catch (e) {}
+      const msg = (t) => {
+        const m = document.getElementById("msg");
+        m.textContent = t;
+        m.classList.add("show");
+        setTimeout(() => m.classList.remove("show"), 2500);
+      };
+      const src = (k) => saved[k] || IMAGES[k] || "";
+
+      function paint(el, k) {
+        el.querySelector("img")?.remove();
+        const s = src(k);
+        el.classList.toggle("has", !!s);
+        if (s) {
+          const i = new Image();
+          i.src = s;
+          i.alt = "";
+          el.prepend(i);
+        }
+        const lbl = el.querySelector(".lbl");
+        if (lbl) lbl.style.display = s ? "none" : "";
+        const logoText = el.querySelector("span:not(.lbl):not(.plus)");
+        if (el.id === "logo" && logoText)
+          logoText.style.display = s ? "none" : "";
+      }
+
+      const slots = {};
+      const logo = document.getElementById("logo");
+      slots.logo = logo;
+      const grid = document.getElementById("grid");
+      ["p1", "p2", "p3", "p4"].forEach((k, n) => {
+        const t = document.createElement("div");
+        t.className = "tile";
+        t.dataset.slot = k;
+        t.tabIndex = 0;
+        t.setAttribute("role", "button");
+        t.setAttribute("aria-label", "Add photo " + (n + 1));
+        t.innerHTML =
+          '<div><div class="plus">+</div><span class="lbl">Product ' +
+          (n + 1) +
+          "</span></div>";
+        const rm = document.createElement("button");
+        rm.className = "rm";
+        rm.type = "button";
+        rm.textContent = "×";
+        rm.setAttribute("aria-label", "Remove photo");
+        rm.onclick = (e) => {
+          e.stopPropagation();
+          delete saved[k];
+          store();
+          paint(t, k);
+        };
+        t.append(rm);
+        grid.append(t);
+        slots[k] = t;
+        t.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            pick(k);
+          }
+        });
+      });
+      Object.entries(slots).forEach(([k, el]) => {
+        paint(el, k);
+        el.addEventListener("click", () => pick(k));
+      });
+
+      function store() {
+        try {
+          localStorage.setItem(KEY, JSON.stringify(saved));
+        } catch (e) {
+          msg("Photo too large to save");
+        }
+      }
+
+      const input = document.getElementById("file");
+      let current = null;
+      function pick(k) {
+        current = k;
+        input.value = "";
+        input.click();
+      }
+      input.addEventListener("change", () => {
+        const f = input.files[0];
+        if (!f || !current) return;
+        const k = current,
+          r = new FileReader();
+        r.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            const max = 800,
+              s = Math.min(1, max / Math.max(img.width, img.height));
+            const c = document.createElement("canvas");
+            c.width = img.width * s;
+            c.height = img.height * s;
+            c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+            saved[k] = c.toDataURL("image/jpeg", 0.82);
+            store();
+            paint(slots[k], k);
+          };
+          img.src = r.result;
+        };
+        r.readAsDataURL(f);
+      });
+
+      /* vCard & Android Contact Intent */
+      const vcard = [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        "N:;Aira descallar;;;",
+        "FN:Aira descallar",
+        "TEL;TYPE=CELL:+639625430267",
+        "EMAIL:airamariedescallar18@gmail.com",
+        "NOTE:Endless connection for you and your business",
+        "URL;TYPE=Facebook:https://www.facebook.com/airamarie.descallar.9",
+        "URL;TYPE=Instagram:https://www.instagram.com/_armre.iaai/",
+        "END:VCARD",
+      ].join("\r\n");
+
+      // Try to open Android Contacts app with pre-filled information
+      function openAndroidContacts() {
+        // Check if we're on Android with a compatible browser
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const isChrome = /Chrome/i.test(navigator.userAgent) && !/Version/.test(navigator.userAgent);
+
+        if (isAndroid && isChrome) {
+          // Use intent to open contacts with pre-filled info
+          const vcardBlob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
+          const vcardUrl = URL.createObjectURL(vcardBlob);
+
+          // Try to open via intent scheme (Android 10+)
+          const intentUrl = "intent://contact/edit#Intent;package=com.android.contacts;action=android.intent.action.EDIT;type=vcard/*;SORIGIN=Aira%20Descallar;EXTRA_NAME=Aira%20descallar;EXTRA_EMAIL=airamariedescallar18@gmail.com;EXTRA_PHONE=+639625430267;S.browser_fallback_url=https%3A%2F%2Fonetap.nfc.ph%2F#*";
+
+          const a = document.createElement("a");
+          a.href = intentUrl;
+          a.target = "_blank";
+          // Click after a small delay to allow intent resolution
+          setTimeout(() => {
+            a.click();
+            URL.revokeObjectURL(vcardUrl);
+          }, 300);
+          msg("Opening contacts app...");
+          return true;
+        }
+        return false;
+      }
+
+      document.getElementById("add").addEventListener("click", () => {
+        // Try opening Android Contacts app first
+        const opened = openAndroidContacts();
+
+        // If not on Android/Chrome, fall back to VCF download
+        if (!opened) {
+          const url = URL.createObjectURL(
+            new Blob([vcard], { type: "text/vcard;charset=utf-8" }),
+          );
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "Onetaplaspinas.vcf";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 5000);
+          msg("Contact file ready — open it to save in your contacts");
+        }
+      });
+    </script>
+  </body>
+</html>
